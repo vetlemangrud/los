@@ -1,4 +1,7 @@
 # Los
+Dette prosjektet er sykt vibecoded, men vi hadde lyst på en enkel oversikt over båtene vi kan se fra hytta
+
+----
 
 A tiny website that lists the boats you can see from one spot on the
 Norwegian coast. Open it on your phone when a boat passes.
