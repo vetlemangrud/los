@@ -20,7 +20,7 @@ func TestCommonsFind(t *testing.T) {
 	c := newTestCommons(t, func(w http.ResponseWriter, r *http.Request) {
 		q := r.URL.Query()
 		if q.Get("gsrsearch") != "IMO 9123456 filetype:bitmap" || q.Get("gsrnamespace") != "6" ||
-			q.Get("generator") != "search" || q.Get("iiurlwidth") != "160" || q.Get("formatversion") != "2" {
+			q.Get("generator") != "search" || q.Get("iiurlwidth") != "960" || q.Get("formatversion") != "2" {
 			t.Errorf("query = %v", q)
 		}
 		if !strings.HasPrefix(r.Header.Get("User-Agent"), "Los/") {

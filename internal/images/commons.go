@@ -44,7 +44,7 @@ func (c *Commons) Find(ctx context.Context, query, match string) (Image, error) 
 		"gsrlimit":      {"10"},
 		"prop":          {"imageinfo"},
 		"iiprop":        {"url"},
-		"iiurlwidth":    {"160"},
+		"iiurlwidth":    {"960"}, // full-width card image, sharp on 3x phone screens
 	}
 	req, err := http.NewRequestWithContext(ctx, http.MethodGet, c.APIURL+"?"+q.Encode(), nil)
 	if err != nil {

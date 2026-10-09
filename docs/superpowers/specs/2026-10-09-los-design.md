@@ -141,7 +141,7 @@ The arc defaults are a first guess. Tune them with `/debug`.
 
 #### `images`
 
-- `Lookup(ctx, v) (Image, bool)` returns a thumbnail URL (about 160 px wide) and
+- `Lookup(ctx, v) (Image, bool)` returns a thumbnail URL (960 px wide, shown full-width at the top of each card) and
   a link to the Commons file page.
 - Strategy: search Commons via the MediaWiki API, first by `IMO <number>`, then
   by the exact ship name in quotes, limited to the File namespace and bitmap

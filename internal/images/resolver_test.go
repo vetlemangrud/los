@@ -71,7 +71,7 @@ func TestResolveByIMOThenName(t *testing.T) {
 	if f.matches[0] != "9123456" || f.matches[1] != "NORDIC STAR" {
 		t.Fatalf("matches = %v", f.matches)
 	}
-	if c.data["v2:imo:9123456"] != shipImg {
+	if c.data["v3:imo:9123456"] != shipImg {
 		t.Fatalf("not cached under imo key: %v", c.data)
 	}
 }
@@ -79,7 +79,7 @@ func TestResolveByIMOThenName(t *testing.T) {
 func TestResolveUsesCache(t *testing.T) {
 	f := &fakeFinder{}
 	c := newMemCache()
-	c.data["v2:mmsi:2"] = shipImg
+	c.data["v3:mmsi:2"] = shipImg
 	got := newResolver(f, c).Resolve(context.Background(), []vessel.Vessel{{MMSI: 2, Name: "X"}})
 	if got[2] != shipImg || len(f.queries) != 0 {
 		t.Fatalf("got %+v queries %v", got, f.queries)
@@ -93,7 +93,7 @@ func TestResolveCachesMiss(t *testing.T) {
 	if _, ok := got[3]; ok {
 		t.Fatal("miss should not be in result map")
 	}
-	if img, ok := c.data["v2:mmsi:3"]; !ok || img.Found() {
+	if img, ok := c.data["v3:mmsi:3"]; !ok || img.Found() {
 		t.Fatalf("miss not cached: %v", c.data)
 	}
 	if len(f.queries) != 0 {

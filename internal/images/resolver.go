@@ -108,13 +108,14 @@ func (r *Resolver) lookup(ctx context.Context, v vessel.Vessel) (Image, bool) {
 	return img, true
 }
 
-// cacheKey is versioned: v1 entries came from unchecked search results and
-// may hold another ship's photo, so they are left to age out.
+// cacheKey is versioned so outdated entries are never served and age out:
+// v1 came from unchecked search results (possibly another ship's photo),
+// v2 holds small thumbnails from before the full-width card layout.
 func cacheKey(v vessel.Vessel) string {
 	if v.IMO > 0 {
-		return fmt.Sprintf("v2:imo:%d", v.IMO)
+		return fmt.Sprintf("v3:imo:%d", v.IMO)
 	}
-	return fmt.Sprintf("v2:mmsi:%d", v.MMSI)
+	return fmt.Sprintf("v3:mmsi:%d", v.MMSI)
 }
 
 type query struct{ text, match string }

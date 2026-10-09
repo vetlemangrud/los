@@ -21,17 +21,21 @@ a { color: var(--accent); text-decoration: none; }
 .note { color: var(--muted); font-size: .9rem; }
 .empty { color: var(--muted); text-align: center; padding: 48px 0; }
 .boats { list-style: none; margin: 0; padding: 0; }
-.boat { display: flex; gap: 12px; padding: 14px 0; border-bottom: 1px solid var(--line); }
-.pic { flex: none; width: 80px; height: 60px; }
-.pic img { display: block; width: 100%; height: 100%; object-fit: cover; border-radius: 6px; background: var(--line); }
-.pic img.icon { object-fit: contain; padding: 8px; }
-.info { flex: 1; min-width: 0; }
-.top { display: flex; justify-content: space-between; gap: 8px; }
-.name { font-weight: 600; overflow-wrap: anywhere; }
+.boat { padding: 20px 0 22px; border-bottom: 1px solid var(--line); }
+.pic { margin-bottom: 12px; }
+.pic a { display: block; }
+.pic img {
+  display: block; width: 100%; aspect-ratio: 16 / 9; object-fit: cover;
+  border-radius: 10px; background: var(--line);
+}
+/* No photo: a shorter banner with the ship-type icon instead of a big empty box. */
+.pic img.icon { aspect-ratio: 4 / 1; object-fit: contain; padding: 12px; }
+.top { display: flex; justify-content: space-between; align-items: baseline; gap: 8px; }
+.name { font-size: 1.2rem; font-weight: 600; overflow-wrap: anywhere; }
 .dist { color: var(--muted); white-space: nowrap; }
-.meta { color: var(--muted); font-size: .9rem; }
-.dest { font-size: .9rem; }
-.photos { font-size: .85rem; }
+.meta { color: var(--muted); margin-top: 2px; }
+.dest { margin-top: 2px; }
+.photos { display: inline-block; margin-top: 6px; font-size: .9rem; }
 #map { height: 70vh; margin: 12px 0; border-radius: 6px; }
 .config { font-size: .85rem; color: var(--muted); border-collapse: collapse; }
 .config th { text-align: left; padding-right: 12px; font-weight: 500; }
