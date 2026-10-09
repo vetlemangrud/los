@@ -61,6 +61,7 @@ type boatRow struct {
 }
 
 type listPage struct {
+	L       lang
 	Boats   []boatRow
 	Updated string
 	Stale   bool
@@ -70,11 +71,13 @@ type listPage struct {
 func (s *Server) handleList(w http.ResponseWriter, r *http.Request) {
 	now := s.Now()
 	cutoff := now.Add(-s.MaxAge)
+	l := negotiate(r.Header.Get("Accept-Language"))
+	w.Header().Set("Vary", "Accept-Language")
 	res, err := s.Boats.Get(r.Context(), "arc", s.Arc.Ring(5), cutoff)
 	if err != nil {
 		s.logf("list: %v", err)
 		s.render(w, http.StatusServiceUnavailable, "list.html",
-			listPage{Error: "Couldn't reach AIS data, try again shortly."})
+			listPage{L: l, Error: l.T("Couldn't reach AIS data, try again shortly.")})
 		return
 	}
 	boats := visible(res.Vessels, s.Arc, freshCutoff(res, cutoff, s.MaxAge))
@@ -82,9 +85,9 @@ func (s *Server) handleList(w http.ResponseWriter, r *http.Request) {
 	if s.Images != nil {
 		imgs = s.Images.Resolve(r.Context(), boats)
 	}
-	page := listPage{Updated: s.clock(res.FetchedAt), Stale: res.Stale}
+	page := listPage{L: l, Updated: s.clock(res.FetchedAt), Stale: res.Stale}
 	for _, b := range boats {
-		page.Boats = append(page.Boats, s.row(b, imgs[b.MMSI], now))
+		page.Boats = append(page.Boats, s.row(l, b, imgs[b.MMSI], now))
 	}
 	s.render(w, http.StatusOK, "list.html", page)
 }
@@ -114,22 +117,22 @@ func visible(vs []vessel.Vessel, arc geo.Arc, cutoff time.Time) []vessel.Vessel 
 	return out
 }
 
-func (s *Server) row(v vessel.Vessel, img images.Image, now time.Time) boatRow {
+func (s *Server) row(l lang, v vessel.Vessel, img images.Image, now time.Time) boatRow {
 	r := boatRow{
 		Name:        v.DisplayName(),
-		Type:        vessel.TypeLabel(v.ShipType),
+		Type:        l.T(vessel.TypeLabel(v.ShipType)),
 		Icon:        "/static/icons/" + vessel.TypeIcon(v.ShipType) + ".svg",
-		Distance:    fmt.Sprintf("%.1f nm", v.DistanceNM),
-		Destination: vessel.ParseDestination(v.Destination),
+		Distance:    l.num(v.DistanceNM) + " nm",
+		Destination: l.T(vessel.ParseDestination(v.Destination)),
 		PhotosURL:   v.PhotosURL(),
 		ThumbURL:    img.ThumbURL,
 		ImagePage:   img.PageURL,
 	}
 	if !v.SpeedUnknown {
-		r.Speed = fmt.Sprintf("%.1f kn", v.SpeedKn)
+		r.Speed = l.num(v.SpeedKn) + " kn"
 	}
 	if vessel.ShowETA(v.ETA, now) {
-		r.ETA = v.ETA.In(s.Loc).Format("2 Jan 15:04")
+		r.ETA = l.date(v.ETA.In(s.Loc))
 	}
 	return r
 }

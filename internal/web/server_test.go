@@ -82,7 +82,7 @@ func TestListShowsVisibleBoatsNearestFirst(t *testing.T) {
 		"https://upload.wikimedia.org/near.jpg", "/static/icons/ship.svg",
 		"https://www.vesselfinder.com/vessels/details/9123456",
 		"https://www.vesselfinder.com/vessels/details/2",
-		"updated 14:00", "Photos ↗",
+		"updated 14:00", "More info ↗", `lang="en"`,
 	} {
 		if !strings.Contains(body, want) {
 			t.Errorf("body missing %q", want)

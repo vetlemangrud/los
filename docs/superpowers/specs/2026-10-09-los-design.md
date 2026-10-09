@@ -35,7 +35,7 @@ Decisions made during brainstorming:
 - **Route:** destination only (`→ Rotterdam, NL · ETA …`). An inferred origin
   port is out of scope for now (see Future work).
 - **Images:** Wikimedia Commons lookup, falling back to a ship-type icon. Each
-  boat also gets a "Photos ↗" link to its VesselFinder page. No scraping or
+  boat also gets a "More info ↗" link to its VesselFinder page. No scraping or
   hotlinking of third-party photo sites.
 - **Data source:** the BarentsWatch Live AIS API (free registration, client
   credentials). The backend may use keys; visitors never log in.
@@ -193,21 +193,25 @@ Los                         updated 14:32 ↻
 [photo]  KRONPRINS HAAKON        2.1 nm
          Passenger · 9.8 kn
          → Bergen, NO · ETA 10 Oct 06:00
-         Photos ↗
+         More info ↗
 ────────────────────────────────────────
 [icon]   NORDIC STAR             5.7 nm
          Cargo · 12.1 kn
          → Rotterdam, NL
-         Photos ↗
+         More info ↗
 ```
 
 - "↻" is a plain link to `/`. Pulling to refresh in the phone browser does the
   same.
-- "Photos ↗" opens `https://www.vesselfinder.com/vessels/details/<IMO>`, or
+- "More info ↗" opens `https://www.vesselfinder.com/vessels/details/<IMO>`, or
   `<MMSI>` when there is no IMO, in a new tab.
 - Empty state: "No boats in view right now."
 - Stale state: a "Data from 14:20 (stale)" note under the header.
 - Times are shown in `Europe/Oslo`.
+- Language: English and Norwegian Bokmål (`nb`), chosen from the browser's
+  `Accept-Language` (nb, no and nn map to nb; anything else gets English).
+  Norwegian uses decimal commas and `10. okt 08:00` dates. `/debug` stays
+  English.
 
 ## Error handling
 
