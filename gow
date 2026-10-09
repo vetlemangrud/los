@@ -1,0 +1,10 @@
+#!/bin/sh
+# gow: run the Go toolchain in Docker so no local Go install is needed.
+# Usage: ./gow test ./...    ./gow vet ./...    ./gow mod tidy
+set -e
+cache="${XDG_CACHE_HOME:-$HOME/.cache}/los-go"
+mkdir -p "$cache"
+exec docker run --rm -u "$(id -u):$(id -g)" \
+  -v "$PWD":/src -w /src \
+  -v "$cache":/cache -e GOCACHE=/cache/build -e GOMODCACHE=/cache/mod -e HOME=/tmp \
+  golang:1.26 go "$@"

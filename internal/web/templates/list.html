@@ -1,0 +1,39 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Los</title>
+<link rel="stylesheet" href="/static/style.css">
+<link rel="icon" href="/static/icons/ship.svg">
+</head>
+<body>
+<header>
+  <h1>Los</h1>
+  <a class="refresh" href="/">{{if .Updated}}updated {{.Updated}} {{end}}↻</a>
+</header>
+{{if .Stale}}<p class="note">Data from {{.Updated}} (stale)</p>{{end}}
+{{if .Error}}
+  <p class="empty">{{.Error}}</p>
+{{else if not .Boats}}
+  <p class="empty">No boats in view right now.</p>
+{{else}}
+  <ul class="boats">
+  {{range .Boats}}
+    <li class="boat">
+      <div class="pic">
+        {{if .ThumbURL}}<a href="{{.ImagePage}}" target="_blank" rel="noopener"><img src="{{.ThumbURL}}" alt="" loading="lazy"></a>
+        {{else}}<img class="icon" src="{{.Icon}}" alt="">{{end}}
+      </div>
+      <div class="info">
+        <div class="top"><span class="name">{{.Name}}</span><span class="dist">{{.Distance}}</span></div>
+        <div class="meta">{{.Type}}{{if .Speed}} · {{.Speed}}{{end}}</div>
+        <div class="dest">→ {{.Destination}}{{if .ETA}} · ETA {{.ETA}}{{end}}</div>
+        <a class="photos" href="{{.PhotosURL}}" target="_blank" rel="noopener">Photos ↗</a>
+      </div>
+    </li>
+  {{end}}
+  </ul>
+{{end}}
+</body>
+</html>

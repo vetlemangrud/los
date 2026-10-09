@@ -1,0 +1,50 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Los · debug</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css">
+<link rel="stylesheet" href="/static/style.css">
+<link rel="icon" href="/static/icons/ship.svg">
+</head>
+<body>
+<header>
+  <h1>Los · debug</h1>
+  <a class="refresh" href="/debug">{{if .Updated}}updated {{.Updated}} {{end}}↻</a>
+</header>
+{{if .Stale}}<p class="note">Data from {{.Updated}} (stale)</p>{{end}}
+{{if .Error}}<p class="note">{{.Error}}</p>{{end}}
+<div id="map"></div>
+<table class="config">
+{{range .Config}}<tr><th>{{.Key}}</th><td>{{.Value}}</td></tr>{{end}}
+</table>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
+<script>
+const DATA = {{.Data}};
+const ll = function (p) { return [p[1], p[0]]; }; // [lon, lat] -> [lat, lon]
+const esc = function (s) {
+  return String(s).replace(/[&<>"']/g, function (c) {
+    return {"&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;"}[c];
+  });
+};
+const map = L.map("map");
+L.tileLayer("https://tile.openstreetmap.org/{z}/{x}/{y}.png", {
+  maxZoom: 18, attribution: "&copy; OpenStreetMap contributors"
+}).addTo(map);
+const box = L.polygon(DATA.bbox.map(ll), {color: "#888", weight: 1, dashArray: "4", fill: false}).addTo(map);
+L.polygon(DATA.arc.map(ll), {color: "#2563eb", weight: 2, fillOpacity: 0.1}).addTo(map);
+L.circleMarker(DATA.observer, {radius: 6, color: "#000", fillColor: "#fff", fillOpacity: 1})
+  .addTo(map).bindPopup("Observer");
+DATA.boats.forEach(function (b) {
+  const color = b.inside ? "#16a34a" : "#dc2626";
+  const rows = Object.keys(b).map(function (k) {
+    return "<tr><th>" + esc(k) + "</th><td>" + esc(b[k]) + "</td></tr>";
+  }).join("");
+  L.circleMarker([b.lat, b.lon], {radius: 7, color: color, fillColor: color, fillOpacity: 0.7})
+    .addTo(map).bindPopup("<table>" + rows + "</table>");
+});
+map.fitBounds(box.getBounds());
+</script>
+</body>
+</html>

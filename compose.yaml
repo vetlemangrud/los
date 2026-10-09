@@ -1,0 +1,13 @@
+services:
+  los:
+    build: .
+    image: los:latest
+    env_file: .env
+    ports:
+      - "8080:8080"
+    volumes:
+      - los-data:/data
+    restart: unless-stopped
+
+volumes:
+  los-data:
