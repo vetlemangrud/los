@@ -21,6 +21,30 @@ Data: [BarentsWatch Live AIS](https://developer.barentswatch.no/docs/AIS/live-ai
 3. `docker compose up -d --build`
 4. Open `http://<host>:8080/` on your phone.
 
+## Hosting with the prebuilt image
+
+Every push to `main` publishes a multi-arch (amd64/arm64) image to
+`ghcr.io/vetlemangrud/los`, tagged `latest`, `X.Y.Z` and `X.Y`. To host Los
+without cloning the repo, put this `compose.yaml` next to a filled-in `.env`
+(see [`.env.example`](.env.example)):
+
+```yaml
+services:
+  los:
+    image: ghcr.io/vetlemangrud/los:latest # or pin a version, e.g. :0.1
+    env_file: .env
+    ports:
+      - "8080:8080"
+    volumes:
+      - los-data:/data
+    restart: unless-stopped
+
+volumes:
+  los-data:
+```
+
+Then `docker compose up -d`. To upgrade: `docker compose pull && docker compose up -d`.
+
 ## Tuning the visibility arc
 
 Open `http://<host>:8080/debug`. The blue sector is what counts as "visible".
